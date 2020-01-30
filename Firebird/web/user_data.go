@@ -2,8 +2,8 @@ package web
 
 import (
 	"Firebird/db"
-	"github.com/gin-gonic/gin"
 	"Firebird/utils"
+	"github.com/gin-gonic/gin"
 )
 
 func listUserData(c *gin.Context) {

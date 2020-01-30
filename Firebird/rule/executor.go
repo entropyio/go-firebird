@@ -1,8 +1,8 @@
 package rule
 
 import (
-	"Firebird/db"
 	"Firebird/config"
+	"Firebird/db"
 )
 
 var (
@@ -15,7 +15,7 @@ func init() {
 	priceExec = priceExecutor("Price")
 }
 
-func Execute(ruleList []db.RuleItem, paramsMap map[string]interface{}) (bool) {
+func Execute(ruleList []db.RuleItem, paramsMap map[string]interface{}) bool {
 	if len(ruleList) == 0 || len(paramsMap) == 0 {
 		return false
 	}
@@ -62,7 +62,7 @@ func Execute(ruleList []db.RuleItem, paramsMap map[string]interface{}) (bool) {
 	return andResult || orResult
 }
 
-func executeRuleItem(ruleItem *db.RuleItem, paramsMap *map[string]interface{}) (bool) {
+func executeRuleItem(ruleItem *db.RuleItem, paramsMap *map[string]interface{}) bool {
 	ruleType := ruleItem.RuleType
 	result := false
 	switch ruleType {

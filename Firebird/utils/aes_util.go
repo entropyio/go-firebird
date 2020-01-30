@@ -1,11 +1,11 @@
 package utils
 
 import (
-	"crypto/cipher"
-	"crypto/aes"
-	"fmt"
 	"bytes"
+	"crypto/aes"
+	"crypto/cipher"
 	"encoding/hex"
+	"fmt"
 )
 
 var aesKey = []byte("AE@H3!7B0G52AQ92")

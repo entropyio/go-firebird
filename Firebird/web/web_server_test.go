@@ -1,8 +1,8 @@
 package web
 
 import (
-	"testing"
 	"fmt"
+	"testing"
 )
 
 func TestStartHttpServer(t *testing.T) {

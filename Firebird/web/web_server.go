@@ -1,11 +1,11 @@
 package web
 
 import (
-	"github.com/gin-gonic/gin"
 	"Firebird/logger"
-	"Firebird/utils"
-	"strings"
 	"Firebird/service"
+	"Firebird/utils"
+	"github.com/gin-gonic/gin"
+	"strings"
 )
 
 var log = logger.NewLogger("[web]")
@@ -52,8 +52,8 @@ func StartHttpServer() {
 }
 
 /**
-	decrtyp params handler
- */
+decrtyp params handler
+*/
 func decryptParams() gin.HandlerFunc {
 	return func(c *gin.Context) {
 		q := c.PostForm("q")
@@ -71,8 +71,8 @@ func decryptParams() gin.HandlerFunc {
 }
 
 /**
-	authentication check handler
- */
+authentication check handler
+*/
 func authorize() gin.HandlerFunc {
 	return func(c *gin.Context) {
 		userId := utils.GetParamString(c, "userId")

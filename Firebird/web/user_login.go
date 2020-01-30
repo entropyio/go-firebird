@@ -1,12 +1,12 @@
 package web
 
 import (
-	"github.com/gin-gonic/gin"
-	"Firebird/utils"
-	"time"
-	"Firebird/db"
-	"strconv"
 	"Firebird/data"
+	"Firebird/db"
+	"Firebird/utils"
+	"github.com/gin-gonic/gin"
+	"strconv"
+	"time"
 )
 
 var loginMap = make(map[int64]*data.LoginUser)

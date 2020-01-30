@@ -2,6 +2,7 @@ package utils
 
 import (
 	"Firebird/config"
+	"Firebird/logger"
 	"crypto/hmac"
 	"crypto/sha256"
 	"encoding/base64"
@@ -14,7 +15,6 @@ import (
 	"sort"
 	"strings"
 	"time"
-	"Firebird/logger"
 )
 
 var log = logger.NewLogger("[utils]")

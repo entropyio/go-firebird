@@ -5,7 +5,6 @@ const (
 	CODE_FAILED  = -1
 
 	CODE_NEED_LOGIN = 10
-
 )
 
 // JSONResult is a shortcut for map[string]interface{}

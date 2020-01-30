@@ -3,8 +3,8 @@ package web
 import (
 	"Firebird/config"
 	"Firebird/db"
-	"github.com/gin-gonic/gin"
 	"Firebird/utils"
+	"github.com/gin-gonic/gin"
 )
 
 func listUserTrade(c *gin.Context) {

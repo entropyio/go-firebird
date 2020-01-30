@@ -1,9 +1,9 @@
 package db
 
 import (
+	"Firebird/logger"
 	"github.com/gohouse/gorose/v2"
 	_ "github.com/mattn/go-sqlite3"
-	"Firebird/logger"
 )
 
 var log = logger.NewLogger("[db]")

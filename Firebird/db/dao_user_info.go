@@ -1,9 +1,9 @@
 package db
 
 import (
+	"Firebird/config"
 	"fmt"
 	"time"
-	"Firebird/config"
 )
 
 func (user *UserInfo) TableName() string {

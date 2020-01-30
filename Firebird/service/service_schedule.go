@@ -1,12 +1,12 @@
 package service
 
 import (
-	"github.com/robfig/cron"
-	"Firebird/utils"
-	"time"
-	"Firebird/db"
 	"Firebird/config"
+	"Firebird/db"
+	"Firebird/utils"
+	"github.com/robfig/cron"
 	"strconv"
+	"time"
 )
 
 func NotifySchedulePrice(symbol string, price float64) {
@@ -16,7 +16,7 @@ func NotifySchedulePrice(symbol string, price float64) {
 
 /**
 计算昨日收益定时任务
- */
+*/
 func StartScheduleTask() {
 	c := cron.New()
 

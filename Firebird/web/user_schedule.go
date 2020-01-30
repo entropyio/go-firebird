@@ -1,11 +1,11 @@
 package web
 
 import (
+	"Firebird/config"
 	"Firebird/db"
+	"Firebird/utils"
 	"github.com/gin-gonic/gin"
 	"strconv"
-	"Firebird/config"
-	"Firebird/utils"
 )
 
 func listUserSchedule(c *gin.Context) {

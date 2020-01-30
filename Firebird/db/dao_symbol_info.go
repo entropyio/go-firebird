@@ -1,8 +1,8 @@
 package db
 
 import (
-	"time"
 	"Firebird/config"
+	"time"
 )
 
 func (symbol *SymbolInfo) TableName() string {

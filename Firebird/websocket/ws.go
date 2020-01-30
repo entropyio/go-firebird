@@ -6,8 +6,8 @@ import (
 	"compress/gzip"
 	"encoding/binary"
 	"fmt"
-	"io/ioutil"
 	"golang.org/x/net/websocket"
+	"io/ioutil"
 )
 
 var origin = "http://www.baidu.com"

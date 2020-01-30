@@ -1,8 +1,8 @@
 package utils
 
 import (
-	"encoding/hex"
 	"crypto/md5"
+	"encoding/hex"
 )
 
 const (
