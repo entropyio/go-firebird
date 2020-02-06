@@ -4,7 +4,7 @@ import (
 	"time"
 )
 
-func (trade *UserData) TableName() string {
+func (data *UserData) TableName() string {
 	return "user_data"
 }
 
@@ -47,8 +47,10 @@ func QueryUserData(userDataQuery *UserDataQuery) (count int64, dataList []UserDa
 	}
 	// get count
 	resultCount, err = query.Count("id")
-	query.Select()
-
+	err = query.Select()
+	if nil != err {
+		log.Error(err)
+	}
 	return resultCount, resultList
 }
 
@@ -77,7 +79,10 @@ func InsertUserData(userData *UserData) (id int64) {
 	query := db.Table(userData)
 	query.Data(data)
 
-	id, _ = query.InsertGetId()
+	id, err = query.InsertGetId()
+	if nil != err {
+		log.Error(err)
+	}
 	userData.Id = id
 	return id
 }
@@ -130,8 +135,10 @@ func UpdateUserData(userData *UserData) (count int64) {
 	query := db.Table(userData)
 	query.Data(data)
 	query.Where("id", userData.Id)
-	count, _ = query.Update()
-
+	count, err = query.Update()
+	if nil != err {
+		log.Error(err)
+	}
 	return count
 }
 
@@ -143,7 +150,9 @@ func DeleteUserData(id int64) (count int64) {
 	db := DB()
 	query := db.Table("user_data")
 	query.Where("id", id)
-	count, _ = query.Delete()
-
+	count, err = query.Delete()
+	if nil != err {
+		log.Error(err)
+	}
 	return count
 }

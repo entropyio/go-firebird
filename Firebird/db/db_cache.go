@@ -88,6 +88,9 @@ func GetUserFromCacheByName(name string) UserInfo {
 	return cacheDataMap.userNameMap[name]
 }
 
+func GetAllSymbolFromCache() map[string]SymbolInfo {
+	return cacheDataMap.symbolNameMap
+}
 func GetSymbolFromCacheById(id int64) SymbolInfo {
 	return cacheDataMap.symbolIdMap[id]
 }

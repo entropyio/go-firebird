@@ -8,9 +8,9 @@ create table symbol_info
   gmt_modified DATETIME    not null,
   symbol_name  VARCHAR(20) not null,
   symbol_desc  VARCHAR(32) not null,
-  status       int         not null,
   symbol_icon  VARCHAR(10),
-  symbol_group VARCHAR(10)
+  symbol_group VARCHAR(10),
+  status       int         not null
 );
 
 drop index if exists symbol_info__symbol;
@@ -25,6 +25,10 @@ INSERT INTO symbol_info (id, gmt_create, gmt_modified, symbol_name, symbol_desc,
 VALUES (1, '1576581827473', '1576581830743', 'eosusdt', 'EOS/USDT', 1, 'eos', 'EOS');
 INSERT INTO symbol_info (id, gmt_create, gmt_modified, symbol_name, symbol_desc, status, symbol_icon, symbol_group)
 VALUES (2, '1576582464918', '1576582466902', 'btcusdt', 'BTC/USDT', 1, 'btc', 'BTC');
+INSERT INTO symbol_info (id, gmt_create, gmt_modified, symbol_name, symbol_desc, status, symbol_icon, symbol_group)
+VALUES (3, '1576582464918', '1576582466902', 'steemusdt', 'STEEM/USDT', 1, 'steem', 'STEEM');
+INSERT INTO symbol_info (id, gmt_create, gmt_modified, symbol_name, symbol_desc, status, symbol_icon, symbol_group)
+VALUES (4, '1576582464918', '1576582466902', 'hcusdt', 'HC/USDT', 1, 'hc', 'HC');
 
 
 /* user_account */
@@ -46,6 +50,7 @@ create table user_account
   total         double                        default 0,
   benefit       double                        default 0,
   rate          double                        default 0,
+  sort_num      int                           default 0,
   status        int      not null
 );
 
@@ -57,10 +62,14 @@ drop index if exists user_account__user;
 create unique index user_account__user
   on user_account (user_id, symbol_id);
 
-INSERT INTO user_account (id, gmt_create, gmt_modified, user_id, symbol_id, hold_price, hold_amount, yest_benefit, total_benefit, price, amount, total, benefit, rate, status)
-VALUES (1, '1578028057644', '1578028057644', 1, 1, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1);
-INSERT INTO user_account (id, gmt_create, gmt_modified, user_id, symbol_id, hold_price, hold_amount, yest_benefit, total_benefit, price, amount, total, benefit, rate, status)
-VALUES (2, '1578034351472', '1578034351472', 1, 2, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1);
+INSERT INTO user_account (id, gmt_create, gmt_modified, user_id, symbol_id, hold_price, hold_amount, yest_benefit, total_benefit, price, amount, total, benefit, rate, sort_num, status)
+VALUES (1, '1578028057644', '1578028057644', 1, 1, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1, 1);
+INSERT INTO user_account (id, gmt_create, gmt_modified, user_id, symbol_id, hold_price, hold_amount, yest_benefit, total_benefit, price, amount, total, benefit, rate, sort_num, status)
+VALUES (2, '1578034351472', '1578034351472', 1, 2, 0, 0, 0, 0, 0, 0, 0, 0, 0, 2, 1);
+INSERT INTO user_account (id, gmt_create, gmt_modified, user_id, symbol_id, hold_price, hold_amount, yest_benefit, total_benefit, price, amount, total, benefit, rate, sort_num, status)
+VALUES (3, '1578034351472', '1578034351472', 1, 3, 0, 0, 0, 0, 0, 0, 0, 0, 0, 3, 1);
+INSERT INTO user_account (id, gmt_create, gmt_modified, user_id, symbol_id, hold_price, hold_amount, yest_benefit, total_benefit, price, amount, total, benefit, rate, sort_num, status)
+VALUES (4, '1578034351472', '1578034351472', 1, 4, 0, 0, 0, 0, 0, 0, 0, 0, 0, 4, 1);
 
 
 /* user_info */
@@ -101,12 +110,12 @@ create table user_trade
   symbol_id    INTEGER  not null,
   price        double   not null,
   amount       double   not null,
-  status       int      not null,
   hold_price   double                        default 0 not null,
   hold_amount  double                        default 0 not null,
   type         int                           default 0 not null,
   schedule_id  INTEGER                       default 0 not null,
-  reason       VARCHAR(100) default ""
+  reason       VARCHAR(100)                  default "",
+  status       int      not null
 );
 
 drop index if exists user_trade__symbol;
@@ -158,7 +167,7 @@ create table rule_item
   rule_type    int          not null,
   join_type    int          not null,
   op_type      int          not null,
-  value        VARCHAR(255) NOT NULL,
+  op_value     VARCHAR(255) NOT NULL,
   status       int          not null
 );
 

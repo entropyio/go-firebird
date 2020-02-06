@@ -295,7 +295,7 @@ func FutureContractOpenorders(symbol, pageIndex, pageSize string) string {
  *            不填默认20，不得多于50
  */
 func FutureContractHisorders(symbol, tradeType, ordertype, status,
-	createDate, pageIndex, pageSize string) string {
+createDate, pageIndex, pageSize string) string {
 
 	strRequest := "/api/v1/contract_hisorders"
 	params := make(map[string]string)

@@ -143,7 +143,7 @@ func addUserTrade(c *gin.Context) {
 	c.JSON(200, JSONResult{
 		"retCode": result,
 		"message": "SUCCESS",
-		"data":    userTrade,
+		"data":    "操作成功",
 	})
 }
 

@@ -2,7 +2,6 @@ package db
 
 import (
 	"Firebird/config"
-	"fmt"
 	"time"
 )
 
@@ -43,11 +42,10 @@ func QueryRuleItem(ruleInfoQuery *RuleItemQuery) (count int64, ruleList []RuleIt
 	}
 	// get count
 	resultCount, err = query.Count("id")
-	// output sql
-	//sql, _, _ := query.BuildSql()
-	//fmt.Println(sql)
-	// run query
-	query.Select()
+	err = query.Select()
+	if nil != err {
+		log.Error(err)
+	}
 
 	return resultCount, resultList
 }
@@ -67,19 +65,16 @@ func InsertRuleItem(ruleItem *RuleItem) (id int64) {
 		"rule_type":    ruleItem.RuleType,
 		"join_type":    ruleItem.JoinType,
 		"op_type":      ruleItem.OpType,
-		"value":        ruleItem.Value,
+		"op_value":     ruleItem.OpValue,
 		"status":       ruleItem.Status,
 	}
 	query := db.Table(ruleItem)
 	query.Data(data)
-	// output sql
-	//sql, _, _ := query.BuildSql()
-	//fmt.Println(sql)
-
 	id, err = query.InsertGetId()
 	if nil != err {
-		fmt.Println(err)
+		log.Error(err)
 	}
+	ruleItem.Id = id
 	return id
 }
 
@@ -112,8 +107,8 @@ func UpdateRuleItem(ruleItem *RuleItem) (count int64) {
 	if ruleItem.OpType > 0 {
 		data["op_type"] = ruleItem.OpType
 	}
-	if ruleItem.Value != "" {
-		data["value"] = ruleItem.Value
+	if ruleItem.OpValue != "" {
+		data["op_value"] = ruleItem.OpValue
 	}
 	if ruleItem.Status > 0 {
 		data["status"] = ruleItem.Status
@@ -122,11 +117,10 @@ func UpdateRuleItem(ruleItem *RuleItem) (count int64) {
 	query := db.Table(ruleItem)
 	query.Data(data)
 	query.Where("id", ruleItem.Id)
-	count, _ = query.Update()
-
-	// output sql
-	//sql, _, _ := query.BuildSql()
-	//fmt.Println(sql)
+	count, err = query.Update()
+	if nil != err {
+		log.Error(err)
+	}
 
 	return count
 }
@@ -139,11 +133,26 @@ func DeleteRuleItem(id int64) (count int64) {
 	db := DB()
 	query := db.Table("rule_item")
 	query.Where("id", id)
-	count, _ = query.Delete()
+	count, err = query.Delete()
+	if nil != err {
+		log.Error(err)
+	}
 
-	// output sql
-	//sql, _, _ := query.BuildSql()
-	//fmt.Println(sql)
+	return count
+}
+
+func deleteScheduleRules(scheduleId int64) (count int64) {
+	if scheduleId <= 0 {
+		return 0
+	}
+
+	db := DB()
+	query := db.Table("rule_item")
+	query.Where("schedule_id", scheduleId)
+	count, err = query.Delete()
+	if nil != err {
+		log.Error(err)
+	}
 
 	return count
 }
@@ -152,6 +161,9 @@ func loadAllRuleItem() (ruleList []RuleItem) {
 	db := DB()
 	query := db.Table(&ruleList)
 	query.Where("status", "=", config.STATUS_ENABLE)
-	query.Select()
+	err := query.Select()
+	if nil != err {
+		log.Error(err)
+	}
 	return ruleList
 }

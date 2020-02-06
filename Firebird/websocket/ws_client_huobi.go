@@ -1,6 +1,7 @@
 package websocket
 
 import (
+	"Firebird/db"
 	"fmt"
 	"math/rand"
 	"net"
@@ -18,7 +19,7 @@ func (cli *Client) RunClient() {
 	dialer := websocket.DefaultDialer
 	dialer.NetDial = func(network, addr string) (net.Conn, error) {
 		addrs := []string{string(localIP)}
-		fmt.Println("addrs=", addrs)
+		fmt.Println("IP Address = ", addrs)
 		localAddr := &net.TCPAddr{IP: net.ParseIP(addrs[rand.Int()%len(addrs)]), Port: 0}
 		d := net.Dialer{
 			Timeout:   30 * time.Second,
@@ -41,15 +42,14 @@ func (cli *Client) RunClient() {
 		SubClientNum()
 	}()
 
-	message := []byte("{\"sub\":\"market.eosusdt.kline.1day\", \"id\":\"id10\"}")
-	err = c.WriteMessage(websocket.TextMessage, message)
-	if err != nil {
-		log.Error("write err :", err)
-	}
-	message = []byte("{\"sub\":\"market.btcusdt.kline.1day\", \"id\":\"id10\"}")
-	err = c.WriteMessage(websocket.TextMessage, message)
-	if err != nil {
-		log.Error("write err :", err)
+	symbolMap := db.GetAllSymbolFromCache()
+	for k := range symbolMap {
+		topic := fmt.Sprintf("{\"sub\":\"market.%s.kline.1day\", \"id\":\"fb1\"}", k)
+		message := []byte(topic)
+		err = c.WriteMessage(websocket.TextMessage, message)
+		if err != nil {
+			log.Error("write err :", err)
+		}
 	}
 
 	go func() {
@@ -58,7 +58,7 @@ func (cli *Client) RunClient() {
 		for {
 			select {
 			case <-pangTicker.C:
-				message = []byte(fmt.Sprintf("{\"pong\":%d}", time.Now().Unix()))
+				message := []byte(fmt.Sprintf("{\"pong\":%d}", time.Now().Unix()))
 				err = c.WriteMessage(websocket.TextMessage, message)
 				if err != nil {
 					log.Error("send msg err:", err)

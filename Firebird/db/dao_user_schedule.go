@@ -2,7 +2,6 @@ package db
 
 import (
 	"Firebird/config"
-	"fmt"
 	"time"
 )
 
@@ -52,12 +51,10 @@ func QueryUserSchedule(userScheduleQuery *UserScheduleQuery) (count int64, userL
 	}
 	// get count
 	resultCount, err = query.Count("id")
-	// output sql
-	//sql, _, _ := query.BuildSql()
-	//fmt.Println(sql)
-	// run query
-	query.Select()
-
+	err = query.Select()
+	if nil != err {
+		log.Error(err)
+	}
 	return resultCount, resultList
 }
 
@@ -81,14 +78,11 @@ func InsertUserSchedule(userSchedule *UserSchedule) (id int64) {
 	}
 	query := db.Table(userSchedule)
 	query.Data(data)
-	// output sql
-	//sql, _, _ := query.BuildSql()
-	//fmt.Println(sql)
-
 	id, err = query.InsertGetId()
 	if nil != err {
-		fmt.Println(err)
+		log.Error(err)
 	}
+	userSchedule.Id = id
 	return id
 }
 
@@ -131,11 +125,10 @@ func UpdateUserSchedule(userSchedule *UserSchedule) (count int64) {
 	query := db.Table(userSchedule)
 	query.Data(data)
 	query.Where("id", userSchedule.Id)
-	count, _ = query.Update()
-
-	// output sql
-	//sql, _, _ := query.BuildSql()
-	//fmt.Println(sql)
+	count, err = query.Update()
+	if nil != err {
+		log.Error(err)
+	}
 
 	return count
 }
@@ -148,15 +141,33 @@ func DeleteUserSchedule(id int64) (count int64) {
 	db := DB()
 	query := db.Table("user_schedule")
 	query.Where("id", id)
-	count, _ = query.Delete()
-
+	count, err = query.Delete()
+	if nil != err {
+		log.Error(err)
+	}
 	return count
+}
+
+func UpdateScheduleRule(userSchedule *UserSchedule, ruleList []RuleItem) {
+	deleteScheduleRules(userSchedule.Id)
+	for i := range ruleList {
+		ruleItem := ruleList[i]
+		ruleItem.Id = 0
+		ruleItem.UserId = userSchedule.UserId
+		ruleItem.SymbolId = userSchedule.SymbolId
+		ruleItem.ScheduleId = userSchedule.Id
+		ruleItem.Status = config.STATUS_ENABLE
+		InsertRuleItem(&ruleItem)
+	}
 }
 
 func loadAllSchedule() (resultList []UserSchedule) {
 	db := DB()
 	query := db.Table(&resultList)
 	query.Where("status", "=", config.STATUS_ENABLE)
-	query.Select()
+	err := query.Select()
+	if nil != err {
+		log.Error(err)
+	}
 	return resultList
 }

@@ -49,7 +49,10 @@ func QuerySymbolInfo(symbolInfoQuery *SymbolInfoQuery) (count int64, userList []
 	//sql, _, _ := query.BuildSql()
 	//fmt.Println(sql)
 	// run query
-	query.Select()
+	err = query.Select()
+	if nil != err {
+		log.Error(err)
+	}
 
 	return resultCount, resultList
 }
@@ -71,11 +74,11 @@ func InsertSymbolInfo(symbolInfo *SymbolInfo) (id int64) {
 	}
 	query := db.Table(symbolInfo)
 	query.Data(data)
-	// output sql
-	//sql, _, _ := query.BuildSql()
-	//fmt.Println(sql)
 
-	id, _ = query.InsertGetId()
+	id, err = query.InsertGetId()
+	if nil != err {
+		log.Error(err)
+	}
 	symbolInfo.Id = id
 
 	return id
@@ -111,11 +114,10 @@ func UpdateSymbolInfo(symbolInfo *SymbolInfo) (count int64) {
 	query := db.Table(symbolInfo)
 	query.Data(data)
 	query.Where("id", symbolInfo.Id)
-	count, _ = query.Update()
-
-	// output sql
-	//sql, _, _ := query.BuildSql()
-	//fmt.Println(sql)
+	count, err = query.Update()
+	if nil != err {
+		log.Error(err)
+	}
 
 	return count
 }
@@ -128,11 +130,10 @@ func DeleteSymbolInfo(id int64) (count int64) {
 	db := DB()
 	query := db.Table("symbol_info")
 	query.Where("id", id)
-	count, _ = query.Delete()
-
-	// output sql
-	//sql, _, _ := query.BuildSql()
-	//fmt.Println(sql)
+	count, err = query.Delete()
+	if nil != err {
+		log.Error(err)
+	}
 
 	return count
 }
@@ -141,6 +142,9 @@ func loadAllSymbolInfo() (symbolList []SymbolInfo) {
 	db := DB()
 	query := db.Table(&symbolList)
 	query.Where("status", "=", config.STATUS_ENABLE)
-	query.Select()
+	err := query.Select()
+	if nil != err {
+		log.Error(err)
+	}
 	return symbolList
 }

@@ -2,7 +2,6 @@ package db
 
 import (
 	"Firebird/config"
-	"fmt"
 	"time"
 )
 
@@ -46,11 +45,10 @@ func QueryUserInfo(userInfoQuery *UserInfoQuery) (count int64, userList []UserIn
 	}
 	// get count
 	resultCount, err = query.Count("id")
-	// output sql
-	//sql, _, _ := query.BuildSql()
-	//fmt.Println(sql)
-	// run query
-	query.Select()
+	err = query.Select()
+	if nil != err {
+		log.Error(err)
+	}
 
 	return resultCount, resultList
 }
@@ -73,8 +71,9 @@ func InsertUserInfo(userInfo *UserInfo) (id int64) {
 
 	id, err = query.InsertGetId()
 	if nil != err {
-		fmt.Println(err)
+		log.Error(err)
 	}
+	userInfo.Id = id
 	return id
 }
 
@@ -102,8 +101,10 @@ func UpdateUserInfo(userInfo *UserInfo) (count int64) {
 	query := db.Table(userInfo)
 	query.Data(data)
 	query.Where("id", userInfo.Id)
-	count, _ = query.Update()
-
+	count, err = query.Update()
+	if nil != err {
+		log.Error(err)
+	}
 	return count
 }
 
@@ -115,8 +116,10 @@ func DeleteUserInfo(id int64) (count int64) {
 	db := DB()
 	query := db.Table("user_info")
 	query.Where("id", id)
-	count, _ = query.Delete()
-
+	count, err = query.Delete()
+	if nil != err {
+		log.Error(err)
+	}
 	return count
 }
 
@@ -128,8 +131,10 @@ func GetUserInfoById(id int64) (record UserInfo) {
 	db := DB()
 	query := db.Table(&record)
 	query.Where("id", id)
-	query.Select()
-
+	err := query.Select()
+	if nil != err {
+		log.Error(err)
+	}
 	return record
 }
 
@@ -142,8 +147,10 @@ func GetUserInfoByName(name string) (record UserInfo) {
 	query := db.Table(&record)
 	query.Where("user_name", name)
 	query.Where("status", config.STATUS_ENABLE)
-	query.Select()
-
+	err := query.Select()
+	if nil != err {
+		log.Error(err)
+	}
 	return record
 }
 
@@ -151,6 +158,9 @@ func loadAllUserInfo() (userList []UserInfo) {
 	db := DB()
 	query := db.Table(&userList)
 	query.Where("status", "=", config.STATUS_ENABLE)
-	query.Select()
+	err := query.Select()
+	if nil != err {
+		log.Error(err)
+	}
 	return userList
 }

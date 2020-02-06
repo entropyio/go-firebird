@@ -11,7 +11,7 @@ import (
 
 /**
 current price
-*/
+ */
 var priceMap = make(map[string]float64)
 
 func GetSymbolPrice(symbol string) (price float64) {
@@ -32,7 +32,7 @@ func NotifySymbolPrice(symbol string, price float64) {
 
 /**
 yesterday price
-*/
+ */
 var timePriceMap = make(map[string]data.KlineTickData)
 
 func GetSymbolPriceByTime(symbolId int64, st time.Time) (price float64) {

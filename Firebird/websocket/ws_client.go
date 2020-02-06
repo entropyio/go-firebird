@@ -166,7 +166,6 @@ func (cli *Client) runDefaultClient() {
 	//	log.Println("write err :", err)
 	//}
 
-	// todo: should use this data
 	message = []byte("{\"sub\":\"market.eosusdt.kline.1day\", \"id\":\"id10\"}")
 	err = c.WriteMessage(websocket.TextMessage, message)
 	if err != nil {
@@ -230,7 +229,6 @@ func (cli *Client) runDefaultClient() {
 			log.Error("gzip Error : ", err)
 		}
 
-		// TODO
 		depthData := data.DepthData{}
 		json.Unmarshal(msg, &depthData)
 		bids := depthData.Tick.Bids

@@ -16,7 +16,7 @@ func NotifySchedulePrice(symbol string, price float64) {
 
 /**
 计算昨日收益定时任务
-*/
+ */
 func StartScheduleTask() {
 	c := cron.New()
 

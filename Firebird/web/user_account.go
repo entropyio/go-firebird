@@ -32,6 +32,55 @@ func listUserAccount(c *gin.Context) {
 	})
 }
 
+func saveUserAccount(c *gin.Context)  {
+	userAccount := db.UserAccount{}
+
+	userAccount.UserId = utils.GetParamInt64(c, "userId")
+	userAccount.SymbolId = utils.GetParamInt64(c, "symbolId")
+	userAccount.Status = utils.GetParamInt(c, "status")
+
+	var result int64 = 0
+	if userAccount.Id > 0 {
+		result = db.UpdateUserAccount(&userAccount)
+	} else {
+		result = db.InsertUserAccount(&userAccount)
+	}
+
+	if result > 0 {
+		result = CODE_SUCCESS
+	} else {
+		result = CODE_FAILED
+	}
+	c.JSON(200, JSONResult{
+		"retCode": result,
+		"message": "SUCCESS",
+		"data":    userAccount,
+	})
+}
+
+func deleteUserAccount(c *gin.Context)  {
+	id := utils.GetParamInt64(c, "id")
+	if id <= 0 {
+		c.JSON(200, JSONResult{
+			"retCode": CODE_FAILED,
+			"message": "参数错误",
+		})
+		return
+	}
+
+	result := db.DeleteUserAccount(id)
+	if result > 0 {
+		result = CODE_SUCCESS
+	} else {
+		result = CODE_FAILED
+	}
+	c.JSON(200, JSONResult{
+		"retCode": result,
+		"message": "SUCCESS",
+		"data":    result,
+	})
+}
+
 func getUserAccountByUid(c *gin.Context) {
 	userId := utils.GetParamInt64(c, "userId")
 	symbolId := utils.GetParamInt64(c, "symbolId")
@@ -98,7 +147,9 @@ func calculateCurrentAccount(account *db.UserAccount) (accountVO db.UserAccountV
 	if price > 0 {
 		account.Price = price
 		account.Total = account.Price * account.HoldAmount
-		account.Rate = (price - account.HoldPrice) * 100 / account.HoldPrice
+		if 0 != account.HoldPrice {
+			account.Rate = (price - account.HoldPrice) * 100 / account.HoldPrice
+		}
 		account.Benefit = (price - account.HoldPrice) * account.HoldAmount
 
 		accountVO.Price = account.Price

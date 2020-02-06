@@ -39,6 +39,7 @@ type UserAccount struct {
 	Total        float64   `gorose:"total"`
 	Benefit      float64   `gorose:"benefit"`
 	Rate         float64   `gorose:"rate"`
+	SortNum      int       `gorose:"sort_num"`
 	Status       int       `gorose:"status"`
 }
 
@@ -57,6 +58,7 @@ type UserAccountVO struct {
 	Total        float64   `json:"total"`
 	Benefit      float64   `json:"benefit"`
 	Rate         float64   `json:"rate"`
+	SortNum      int       `json:"sortNum"`
 	SymbolName   string    `json:"symbolName"`
 	SymbolDesc   string    `json:"symbolDesc"`
 	SymbolIcon   string    `json:"symbolIcon"`
@@ -97,7 +99,7 @@ type UserTrade struct {
 	Price       float64   `gorose:"price"`
 	Amount      float64   `gorose:"amount"`
 	Type        int       `gorose:"type"`
-	ScheduleId  int64     `gorose:"scheduleId"`
+	ScheduleId  int64     `gorose:"schedule_id"`
 	HoldPrice   float64   `gorose:"hold_price"`
 	HoldAmount  float64   `gorose:"hold_amount"`
 	Reason      string    `gorose:"reason"`
@@ -151,24 +153,38 @@ type UserTradeQuery struct {
 }
 
 type SymbolInfo struct {
-	Id          int64     `gorose:"id"`
-	GmtCreate   time.Time `gorose:"gmt_create"`
-	GmtModified time.Time `gorose:"gmt_modified"`
-	SymbolName  string    `gorose:"symbol_name"`
-	SymbolDesc  string    `gorose:"symbol_desc"`
-	SymbolIcon  string    `gorose:"symbol_icon"`
-	SymbolGroup string    `gorose:"symbol_group"`
-	Status      int       `gorose:"status"`
+	Id          int64     `gorose:"id" json:"id"`
+	GmtCreate   time.Time `gorose:"gmt_create" json:"gmtCreate"`
+	GmtModified time.Time `gorose:"gmt_modified" json:"gmtModified"`
+	SymbolName  string    `gorose:"symbol_name" json:"symbolName"`
+	SymbolDesc  string    `gorose:"symbol_desc" json:"symbolDesc"`
+	SymbolIcon  string    `gorose:"symbol_icon" json:"symbolIcon"`
+	SymbolGroup string    `gorose:"symbol_group" json:"symbolGroup"`
+	Status      int       `gorose:"status" json:"status"`
+}
+
+func (symbol SymbolInfo) MarshalJSON() ([]byte, error) {
+	type sAlias SymbolInfo
+	return json.Marshal(&struct {
+		sAlias
+		GmtCreate   string `json:"gmtCreate"`
+		GmtModified string `json:"gmtModified"`
+	}{
+		sAlias:      (sAlias)(symbol),
+		GmtCreate:   symbol.GmtCreate.Format("2006-01-02 15:04:05"),
+		GmtModified: symbol.GmtModified.Format("2006-01-02 15:04:05"),
+	})
 }
 
 type SymbolInfoQuery struct {
-	Id         int64
-	Status     int
-	SymbolName string
-	StartTime  time.Time
-	EndTime    time.Time
-	PageNumber int
-	PageSize   int
+	Id          int64
+	Status      int
+	SymbolName  string
+	SymbolGroup string
+	StartTime   time.Time
+	EndTime     time.Time
+	PageNumber  int
+	PageSize    int
 }
 
 type RuleItem struct {
@@ -181,20 +197,20 @@ type RuleItem struct {
 	RuleType    int       `gorose:"rule_type" json:"ruleType"`
 	JoinType    int       `gorose:"join_type" json:"joinType"`
 	OpType      int       `gorose:"op_type" json:"opType"`
-	Value       string    `gorose:"value" json:"value"`
+	OpValue     string    `gorose:"op_value" json:"opValue"`
 	Status      int       `gorose:"status" json:"status"`
 }
 
-func (ri RuleItem) MarshalJSON() ([]byte, error) {
-	type riAlias RuleItem
+func (item RuleItem) MarshalJSON() ([]byte, error) {
+	type itemAlias RuleItem
 	return json.Marshal(&struct {
-		riAlias
+		itemAlias
 		GmtCreate   string `json:"gmtCreate"`
 		GmtModified string `json:"gmtModified"`
 	}{
-		riAlias:     (riAlias)(ri),
-		GmtCreate:   ri.GmtCreate.Format("2006-01-02 15:04:05"),
-		GmtModified: ri.GmtModified.Format("2006-01-02 15:04:05"),
+		itemAlias:   (itemAlias)(item),
+		GmtCreate:   item.GmtCreate.Format("2006-01-02 15:04:05"),
+		GmtModified: item.GmtModified.Format("2006-01-02 15:04:05"),
 	})
 }
 
@@ -238,7 +254,7 @@ type UserScheduleVO struct {
 	SymbolIcon  string     `json:"symbolIcon"`
 	SymbolGroup string     `json:"symbolGroup"`
 	Status      int        `json:"status"`
-	Rules       []RuleItem `json:"rules"`
+	RuleList    []RuleItem `json:"ruleList"`
 }
 
 func (usv UserScheduleVO) MarshalJSON() ([]byte, error) {

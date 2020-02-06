@@ -361,7 +361,7 @@ func MapValueEncodeURI(mapValue map[string]string) map[string]string {
 func Map2UrlQuery(mapParams map[string]string) string {
 	var strParams string
 	for key, value := range mapParams {
-		strParams += (key + "=" + value + "&")
+		strParams += key + "=" + value + "&"
 	}
 
 	if 0 < len(strParams) {

@@ -14,7 +14,7 @@ func QueryUserAccount(userAccountQuery *UserAccountQuery) (count int64, userList
 	var resultCount int64
 
 	query := db.Table(&resultList)
-	query.OrderBy("id DESC")
+	query.OrderBy("sort_num ASC")
 	if userAccountQuery.Id > 0 {
 		query.Where("id", "=", userAccountQuery.Id)
 	}
@@ -47,11 +47,10 @@ func QueryUserAccount(userAccountQuery *UserAccountQuery) (count int64, userList
 	}
 	// get count
 	resultCount, err = query.Count("id")
-	// output sql
-	//sql, _, _ := query.BuildSql()
-	//fmt.Println(sql)
-	// run query
-	query.Select()
+	err = query.Select()
+	if nil != err {
+		log.Error(err)
+	}
 
 	return resultCount, resultList
 }
@@ -69,17 +68,16 @@ func InsertUserAccount(userAccount *UserAccount) (id int64) {
 		"symbol_id":     userAccount.SymbolId,
 		"hold_amount":   userAccount.HoldAmount,
 		"hold_price":    userAccount.HoldPrice,
-		"yest_benifit":  userAccount.YestBenefit,
-		"total_benifit": userAccount.TotalBenefit,
+		"yest_benefit":  userAccount.YestBenefit,
+		"total_benefit": userAccount.TotalBenefit,
 		"status":        userAccount.Status,
 	}
 	query := db.Table(userAccount)
 	query.Data(data)
-	// output sql
-	//sql, _, _ := query.BuildSql()
-	//fmt.Println(sql)
-
-	id, _ = query.InsertGetId()
+	id, err = query.InsertGetId()
+	if nil != err {
+		log.Error(err)
+	}
 	userAccount.Id = id
 
 	return id
@@ -119,8 +117,10 @@ func UpdateUserAccount(userAccount *UserAccount) (count int64) {
 	query := db.Table(userAccount)
 	query.Data(data)
 	query.Where("id", userAccount.Id)
-	count, _ = query.Update()
-
+	count, err = query.Update()
+	if nil != err {
+		log.Error(err)
+	}
 	return count
 }
 
@@ -132,8 +132,10 @@ func DeleteUserAccount(id int64) (count int64) {
 	db := DB()
 	query := db.Table("user_account")
 	query.Where("id", id)
-	count, _ = query.Delete()
-
+	count, err = query.Delete()
+	if nil != err {
+		log.Error(err)
+	}
 	return count
 }
 
@@ -145,8 +147,10 @@ func GetUserAccountById(id int64) (record UserAccount) {
 	db := DB()
 	query := db.Table(&record)
 	query.Where("id", id)
-	query.Select()
-
+	err := query.Select()
+	if nil != err {
+		log.Error(err)
+	}
 	return record
 }
 
@@ -159,7 +163,9 @@ func GetUserAccountByUid(userId int64, symbolId int64) (record UserAccount) {
 	query := db.Table(&record)
 	query.Where("user_id", userId)
 	query.Where("symbol_id", symbolId)
-	query.Select()
-
+	err := query.Select()
+	if nil != err {
+		log.Error(err)
+	}
 	return record
 }

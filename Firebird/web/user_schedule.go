@@ -4,6 +4,7 @@ import (
 	"Firebird/config"
 	"Firebird/db"
 	"Firebird/utils"
+	"encoding/json"
 	"github.com/gin-gonic/gin"
 	"strconv"
 )
@@ -67,6 +68,8 @@ func saveUserSchedule(c *gin.Context) {
 	userSchedule.Id = utils.GetParamInt64(c, "id")
 	userSchedule.UserId = utils.GetParamInt64(c, "userId")
 	userSchedule.SymbolId = utils.GetParamInt64(c, "symbolId")
+	userSchedule.Amount = utils.GetParamFloat64(c, "amount")
+	userSchedule.Type = utils.GetParamInt(c, "type")
 	userSchedule.Status = utils.GetParamInt(c, "status")
 	userSchedule.Name = utils.GetParamString(c, "name")
 
@@ -75,6 +78,11 @@ func saveUserSchedule(c *gin.Context) {
 		result = db.UpdateUserSchedule(&userSchedule)
 	} else {
 		result = db.InsertUserSchedule(&userSchedule)
+	}
+	ruleStr := utils.GetParamString(c, "ruleList")
+	var ruleList []db.RuleItem
+	if err := json.Unmarshal([]byte(ruleStr), &ruleList); err == nil {
+		db.UpdateScheduleRule(&userSchedule, ruleList)
 	}
 
 	if result > 0 {
@@ -85,7 +93,7 @@ func saveUserSchedule(c *gin.Context) {
 	c.JSON(200, JSONResult{
 		"retCode": result,
 		"message": "SUCCESS",
-		"data":    userSchedule,
+		"data":    "保存成功",
 	})
 }
 
@@ -152,7 +160,7 @@ func getUserScheduleDetail(id int64) db.UserScheduleVO {
 	}
 	ruleCount, ruleList := db.QueryRuleItem(&ruleQuery)
 	if ruleCount > 0 {
-		scheduleVO.Rules = ruleList
+		scheduleVO.RuleList = ruleList
 	}
 	return scheduleVO
 }
@@ -190,7 +198,7 @@ func saveRuleItem(c *gin.Context) {
 	rule.RuleType = utils.GetParamInt(c, "ruleType")
 	rule.JoinType = utils.GetParamInt(c, "joinType")
 	rule.OpType = utils.GetParamInt(c, "opType")
-	rule.Value = utils.GetParamString(c, "value")
+	rule.OpValue = utils.GetParamString(c, "opValue")
 
 	var result int64 = 0
 	if rule.Id > 0 {

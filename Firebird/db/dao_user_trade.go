@@ -53,8 +53,10 @@ func QueryUserTrade(userTradeQuery *UserTradeQuery) (count int64, tradeList []Us
 	}
 	// get count
 	resultCount, err = query.Count("id")
-
-	query.Select()
+	err = query.Select()
+	if nil != err {
+		log.Error(err)
+	}
 
 	return resultCount, resultList
 }
@@ -80,7 +82,10 @@ func InsertUserTrade(userTrade *UserTrade) (id int64) {
 	query := db.Table(userTrade)
 	query.Data(data)
 
-	id, _ = query.InsertGetId()
+	id, err = query.InsertGetId()
+	if nil != err {
+		log.Error(err)
+	}
 	userTrade.Id = id
 	return id
 }
@@ -127,8 +132,10 @@ func UpdateUserTrade(userTrade *UserTrade) (count int64) {
 	query := db.Table(userTrade)
 	query.Data(data)
 	query.Where("id", userTrade.Id)
-	count, _ = query.Update()
-
+	count, err = query.Update()
+	if nil != err {
+		log.Error(err)
+	}
 	return count
 }
 
@@ -140,7 +147,9 @@ func DeleteUserTrade(id int64) (count int64) {
 	db := DB()
 	query := db.Table("user_trade")
 	query.Where("id", id)
-	count, _ = query.Delete()
-
+	count, err = query.Delete()
+	if nil != err {
+		log.Error(err)
+	}
 	return count
 }

@@ -29,6 +29,8 @@ func StartHttpServer() {
 
 	router.POST("/user/account/list", listUserAccount)
 	router.POST("/user/account/get", getUserAccountByUid)
+	router.POST("/user/account/save", saveUserAccount)
+	router.POST("/user/account/delete", deleteUserAccount)
 
 	router.POST("/user/trade/list", listUserTrade)
 	router.POST("/user/trade/save", addUserTrade)
@@ -47,13 +49,17 @@ func StartHttpServer() {
 
 	router.POST("/user/data/list", listUserData)
 
+	router.POST("/user/symbol/list", listSymbolInfo)
+	router.POST("/user/symbol/save", saveSymbolInfo)
+	router.POST("/user/symbol/delete", deleteSymbolInfo)
+
 	router.Run(":8080") // listen and serve on 0.0.0.0:8080 (for windows "localhost:8080")
 	log.Info("http server started.")
 }
 
 /**
-decrtyp params handler
-*/
+	decrypt params handler
+ */
 func decryptParams() gin.HandlerFunc {
 	return func(c *gin.Context) {
 		q := c.PostForm("q")
@@ -71,8 +77,8 @@ func decryptParams() gin.HandlerFunc {
 }
 
 /**
-authentication check handler
-*/
+	authentication check handler
+ */
 func authorize() gin.HandlerFunc {
 	return func(c *gin.Context) {
 		userId := utils.GetParamString(c, "userId")

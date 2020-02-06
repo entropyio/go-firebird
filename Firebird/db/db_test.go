@@ -140,7 +140,7 @@ func TestInsertSymbolInfo(t *testing.T) {
 
 func TestQuerySymbolInfo(t *testing.T) {
 	var symbolInfoQuery = SymbolInfoQuery{
-		Id: 3,
+		Id: id,
 	}
 	count, list := QuerySymbolInfo(&symbolInfoQuery)
 	fmt.Println(count, list)
@@ -148,7 +148,7 @@ func TestQuerySymbolInfo(t *testing.T) {
 
 func TestUpdateSymbolInfo(t *testing.T) {
 	var symbolInfo = SymbolInfo{
-		Id:          3,
+		Id:          id,
 		SymbolName:  "test1-123",
 		SymbolDesc:  "desc1-123",
 		SymbolIcon:  "icon-123",
