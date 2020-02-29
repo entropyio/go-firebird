@@ -5,7 +5,7 @@ import (
 	"Firebird/db"
 	"Firebird/service"
 	"Firebird/utils"
-	"Firebird/web"
+	"Firebird/web/server"
 	"Firebird/websocket"
 	"fmt"
 )
@@ -25,7 +25,7 @@ func main() {
 	go service.StartScheduleTask()
 
 	db.LoadAllToCache()
-	web.StartHttpServer()
+	server.StartHttpServer("./admin")
 
 	fmt.Println("Firebird started.")
 }

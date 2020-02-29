@@ -1,14 +1,15 @@
-package web
+package api
 
 import (
 	"Firebird/db"
 	"Firebird/service"
 	"Firebird/utils"
+	"Firebird/web"
 	"github.com/gin-gonic/gin"
 	"time"
 )
 
-func listUserAccount(c *gin.Context) {
+func ListUserAccount(c *gin.Context) {
 	query := db.UserAccountQuery{}
 
 	query.Id = utils.GetParamInt64(c, "id")
@@ -23,7 +24,7 @@ func listUserAccount(c *gin.Context) {
 	query.EndTime = utils.GetParamTime(c, "endTime")
 
 	count, resultList := db.QueryUserAccount(&query)
-	c.JSON(200, JSONResult{
+	c.JSON(200, web.JSONResult{
 		"retCode":    0,
 		"message":    "SUCCESS",
 		"dataList":   resultList,
@@ -32,7 +33,7 @@ func listUserAccount(c *gin.Context) {
 	})
 }
 
-func saveUserAccount(c *gin.Context)  {
+func SaveUserAccount(c *gin.Context)  {
 	userAccount := db.UserAccount{}
 
 	userAccount.UserId = utils.GetParamInt64(c, "userId")
@@ -47,22 +48,22 @@ func saveUserAccount(c *gin.Context)  {
 	}
 
 	if result > 0 {
-		result = CODE_SUCCESS
+		result = web.CODE_SUCCESS
 	} else {
-		result = CODE_FAILED
+		result = web.CODE_FAILED
 	}
-	c.JSON(200, JSONResult{
+	c.JSON(200, web.JSONResult{
 		"retCode": result,
 		"message": "SUCCESS",
 		"data":    userAccount,
 	})
 }
 
-func deleteUserAccount(c *gin.Context)  {
+func DeleteUserAccount(c *gin.Context)  {
 	id := utils.GetParamInt64(c, "id")
 	if id <= 0 {
-		c.JSON(200, JSONResult{
-			"retCode": CODE_FAILED,
+		c.JSON(200, web.JSONResult{
+			"retCode": web.CODE_FAILED,
 			"message": "参数错误",
 		})
 		return
@@ -70,22 +71,22 @@ func deleteUserAccount(c *gin.Context)  {
 
 	result := db.DeleteUserAccount(id)
 	if result > 0 {
-		result = CODE_SUCCESS
+		result = web.CODE_SUCCESS
 	} else {
-		result = CODE_FAILED
+		result = web.CODE_FAILED
 	}
-	c.JSON(200, JSONResult{
+	c.JSON(200, web.JSONResult{
 		"retCode": result,
 		"message": "SUCCESS",
 		"data":    result,
 	})
 }
 
-func getUserAccountByUid(c *gin.Context) {
+func GetUserAccountByUid(c *gin.Context) {
 	userId := utils.GetParamInt64(c, "userId")
 	symbolId := utils.GetParamInt64(c, "symbolId")
 	if userId <= 0 || symbolId <= 0 {
-		c.JSON(200, JSONResult{
+		c.JSON(200, web.JSONResult{
 			"retCode": 1,
 			"message": "参数错误",
 		})
@@ -93,18 +94,18 @@ func getUserAccountByUid(c *gin.Context) {
 	}
 
 	record := db.GetUserAccountByUid(userId, symbolId)
-	c.JSON(200, JSONResult{
+	c.JSON(200, web.JSONResult{
 		"retCode": 0,
 		"message": "SUCCESS",
 		"data":    record,
 	})
 }
 
-func getCurrentAccount(c *gin.Context) {
+func GetCurrentAccount(c *gin.Context) {
 	userId := utils.GetParamInt64(c, "userId")
 	symbolId := utils.GetParamInt64(c, "symbolId")
 	if userId <= 0 || symbolId <= 0 {
-		c.JSON(200, JSONResult{
+		c.JSON(200, web.JSONResult{
 			"retCode": 1,
 			"message": "参数错误",
 		})
@@ -114,7 +115,7 @@ func getCurrentAccount(c *gin.Context) {
 	account := db.GetUserAccountByUid(userId, symbolId)
 	accountVO := calculateCurrentAccount(&account)
 
-	c.JSON(200, JSONResult{
+	c.JSON(200, web.JSONResult{
 		"retCode": 0,
 		"message": "SUCCESS",
 		"data":    accountVO,
@@ -133,6 +134,8 @@ func calculateCurrentAccount(account *db.UserAccount) (accountVO db.UserAccountV
 	accountVO.UserId = account.UserId
 	accountVO.Amount = account.Amount
 	accountVO.Id = account.Id
+	accountVO.Status = account.Status
+	accountVO.SortNum = account.SortNum
 
 	// symbol info
 	symbolInfo := db.GetSymbolFromCacheById(account.SymbolId)
@@ -160,23 +163,35 @@ func calculateCurrentAccount(account *db.UserAccount) (accountVO db.UserAccountV
 	return accountVO
 }
 
-func listCurrentAccounts(c *gin.Context) {
+func ListCurrentAccounts(c *gin.Context) {
+	// client param and user check
 	userId := utils.GetParamInt64(c, "userId")
 	if userId <= 0 {
-		c.JSON(200, JSONResult{
+		c.JSON(200, web.JSONResult{
 			"retCode": 1,
 			"message": "参数错误",
 		})
 		return
 	}
+	// admin query param
+	queryUserId := utils.GetParamInt64(c, "queryUserId")
+	if queryUserId > 0 {
+		userId = queryUserId
+	}
+
+	// account query
+	query := db.UserAccountQuery{
+		UserId: userId,
+	}
+	// append symbolId
+	querySymbolId := utils.GetParamInt64(c, "querySymbolId")
+	if querySymbolId > 0 {
+		query.SymbolId = querySymbolId
+	}
 
 	totalVO := db.UserAccountVO{
 		GmtCreate:   time.Now(),
 		GmtModified: time.Now(),
-	}
-
-	query := db.UserAccountQuery{
-		UserId: userId,
 	}
 
 	dataList := make([]db.UserAccountVO, 0)
@@ -198,7 +213,7 @@ func listCurrentAccounts(c *gin.Context) {
 		totalVO.Rate = (totalVO.Total - totalVO.Rate) * 100 / totalVO.Rate
 	}
 
-	c.JSON(200, JSONResult{
+	c.JSON(200, web.JSONResult{
 		"retCode":  0,
 		"message":  "SUCCESS",
 		"data":     totalVO,

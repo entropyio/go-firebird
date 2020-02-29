@@ -246,7 +246,7 @@ var address string
 
 func WSRunWithIP(ip string) {
 
-	address = config.WS_URL
+	address = config.GetWsUrl()
 
 	localIP = ip
 

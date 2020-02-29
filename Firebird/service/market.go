@@ -39,7 +39,7 @@ func FutureMarketHistoryKline(strSymbol, strPeriod string, nSize int) string {
 	mapParams["size"] = strconv.Itoa(nSize)
 
 	strRequestUrl := "/market/history/kline"
-	strUrl := config.MARKET_URL + strRequestUrl
+	strUrl := config.GetMarketUrl() + strRequestUrl
 
 	jsonKLineReturn := utils.HttpGetRequest(strUrl, mapParams)
 	return jsonKLineReturn
@@ -58,7 +58,7 @@ func FutureMarketDetailMerged(strSymbol string) string {
 	mapParams["symbol"] = strSymbol
 
 	strRequestUrl := "/market/detail/merged"
-	strUrl := config.MARKET_URL + strRequestUrl
+	strUrl := config.GetMarketUrl() + strRequestUrl
 
 	jsonTickReturn := utils.HttpGetRequest(strUrl, mapParams)
 
@@ -80,7 +80,7 @@ func FutureMarketDepth(strSymbol, strType string) string {
 	mapParams["symbol"] = strSymbol
 	mapParams["type"] = strType
 	strRequestUrl := "/market/depth"
-	strUrl := config.MARKET_URL + strRequestUrl
+	strUrl := config.GetMarketUrl() + strRequestUrl
 	jsonMarketDepthReturn := utils.HttpGetRequest(strUrl, mapParams)
 	return jsonMarketDepthReturn
 }
@@ -98,7 +98,7 @@ func FutureMarketDetailTrade(strSymbol string) string {
 	mapParams["symbol"] = strSymbol
 
 	strRequestUrl := "/market/trade"
-	strUrl := config.MARKET_URL + strRequestUrl
+	strUrl := config.GetMarketUrl() + strRequestUrl
 
 	jsonTradeDetailReturn := utils.HttpGetRequest(strUrl, mapParams)
 
@@ -117,7 +117,7 @@ func FutureMarketHistoryTrade(strSymbol string, nSize int) string {
 	mapParams["symbol"] = strSymbol
 	mapParams["size"] = strconv.Itoa(nSize)
 	strRequestUrl := "/market/history/trade"
-	strUrl := config.MARKET_URL + strRequestUrl
+	strUrl := config.GetMarketUrl() + strRequestUrl
 	jsonTradeReturn := utils.HttpGetRequest(strUrl, mapParams)
 	return jsonTradeReturn
 }
@@ -135,7 +135,7 @@ func FutureMarketDetail(strSymbol string) string {
 	mapParams["symbol"] = strSymbol
 
 	strRequestUrl := "/market/detail"
-	strUrl := config.MARKET_URL + strRequestUrl
+	strUrl := config.GetMarketUrl() + strRequestUrl
 	jsonMarketDetailReturn := utils.HttpGetRequest(strUrl, mapParams)
 	return jsonMarketDetailReturn
 }

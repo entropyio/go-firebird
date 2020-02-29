@@ -60,7 +60,7 @@ func send(message []byte, ws *websocket.Conn) {
 }
 
 func WSRun() {
-	ws, err := websocket.Dial(config.WS_URL, "", origin)
+	ws, err := websocket.Dial(config.GetWsUrl(), "", origin)
 	if err != nil {
 		log.Fatal(err)
 	}

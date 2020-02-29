@@ -1,9 +1,10 @@
-package web
+package api
 
 import (
 	"Firebird/data"
 	"Firebird/db"
 	"Firebird/utils"
+	"Firebird/web"
 	"github.com/gin-gonic/gin"
 	"strconv"
 	"time"
@@ -11,7 +12,7 @@ import (
 
 var loginMap = make(map[int64]*data.LoginUser)
 
-func userLogin(c *gin.Context) {
+func UserLogin(c *gin.Context) {
 	username := utils.GetParamString(c, "username")
 	//pwd := utils.GetParamString(c, "pwd")
 	user := db.GetUserInfoByName(username)
@@ -24,28 +25,28 @@ func userLogin(c *gin.Context) {
 
 		loginMap[loginUser.UserId] = &loginUser
 
-		c.JSON(200, JSONResult{
-			"retCode": CODE_SUCCESS,
+		c.JSON(200, web.JSONResult{
+			"retCode": web.CODE_SUCCESS,
 			"message": "SUCCESS",
 			"data":    loginUser,
 		})
 	} else {
-		c.JSON(200, JSONResult{
-			"retCode": CODE_FAILED,
+		c.JSON(200, web.JSONResult{
+			"retCode": web.CODE_FAILED,
 			"message": "Login failed",
 		})
 	}
 }
 
-func userLogout(c *gin.Context) {
+func UserLogout(c *gin.Context) {
 	userId := utils.GetParamInt64(c, "userId")
 	token := utils.GetParamString(c, "token")
 	if userId > 0 {
 		if loginUser, ok := loginMap[userId]; ok {
 			if token == loginUser.Token {
 				delete(loginMap, userId)
-				c.JSON(200, JSONResult{
-					"retCode": CODE_SUCCESS,
+				c.JSON(200, web.JSONResult{
+					"retCode": web.CODE_SUCCESS,
 					"message": "SUCCESS",
 					"data":    userId,
 				})
@@ -54,8 +55,8 @@ func userLogout(c *gin.Context) {
 		}
 	}
 
-	c.JSON(200, JSONResult{
-		"retCode": CODE_FAILED,
+	c.JSON(200, web.JSONResult{
+		"retCode": web.CODE_FAILED,
 		"message": "logout failed",
 	})
 }

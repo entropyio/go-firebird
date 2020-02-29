@@ -25,7 +25,7 @@ func WSWithOrder() {
 }
 func run(mapParams map[string]string) {
 
-	ws, err := websocket.Dial(config.WS_ORDER_URL, "", origin)
+	ws, err := websocket.Dial(config.GetWsOrderUrl(), "", origin)
 	if err != nil {
 		log.Fatal(err)
 	}

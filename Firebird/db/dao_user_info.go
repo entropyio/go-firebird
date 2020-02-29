@@ -19,8 +19,8 @@ func QueryUserInfo(userInfoQuery *UserInfoQuery) (count int64, userList []UserIn
 	if userInfoQuery.Id > 0 {
 		query.Where("id", "=", userInfoQuery.Id)
 	}
-	if userInfoQuery.Username != "" {
-		query.Where("user_name", "=", userInfoQuery.Username)
+	if userInfoQuery.UserName != "" {
+		query.Where("user_name", "=", userInfoQuery.UserName)
 	}
 	if userInfoQuery.Status > 0 {
 		query.Where("status", "=", userInfoQuery.Status)
@@ -62,7 +62,7 @@ func InsertUserInfo(userInfo *UserInfo) (id int64) {
 	var data = map[string]interface{}{
 		"gmt_create":   userInfo.GmtCreate,
 		"gmt_modified": userInfo.GmtModified,
-		"user_name":    userInfo.Username,
+		"user_name":    userInfo.UserName,
 		"user_desc":    userInfo.UserDesc,
 		"status":       userInfo.Status,
 	}
@@ -88,8 +88,8 @@ func UpdateUserInfo(userInfo *UserInfo) (count int64) {
 	var data = map[string]interface{}{
 		"gmt_modified": userInfo.GmtModified,
 	}
-	if userInfo.Username != "" {
-		data["user_name"] = userInfo.Username
+	if userInfo.UserName != "" {
+		data["user_name"] = userInfo.UserName
 	}
 	if userInfo.UserDesc != "" {
 		data["user_desc"] = userInfo.UserDesc

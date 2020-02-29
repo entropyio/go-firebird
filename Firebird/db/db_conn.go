@@ -19,7 +19,7 @@ func init() {
 	// mysql Dsn示例 "root:root@tcp(localhost:3306)/test?charset=utf8&parseTime=true"
 	engine, err = gorose.Open(&gorose.Config{
 		Driver: "sqlite3",
-		Dsn:    "D:/blockchain/Firebird/Server/Firebird/data/firebird.db",
+		Dsn:    "D:/blockchain/Firebird/go-firebird/Firebird/data/firebird.db",
 	})
 	if nil != err {
 		panic(err)

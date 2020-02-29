@@ -1,15 +1,16 @@
-package web
+package api
 
 import (
 	"Firebird/config"
 	"Firebird/db"
 	"Firebird/utils"
+	"Firebird/web"
 	"encoding/json"
 	"github.com/gin-gonic/gin"
 	"strconv"
 )
 
-func listUserSchedule(c *gin.Context) {
+func ListUserSchedule(c *gin.Context) {
 	query := db.UserScheduleQuery{}
 
 	query.Id = utils.GetParamInt64(c, "id")
@@ -31,8 +32,8 @@ func listUserSchedule(c *gin.Context) {
 		}
 	}
 
-	c.JSON(200, JSONResult{
-		"retCode":    CODE_SUCCESS,
+	c.JSON(200, web.JSONResult{
+		"retCode":    web.CODE_SUCCESS,
 		"message":    "SUCCESS",
 		"dataList":   dataList,
 		"totalCount": count,
@@ -62,7 +63,7 @@ func convertToScheduleVO(schedule *db.UserSchedule) (scheduleVO db.UserScheduleV
 	return scheduleVO
 }
 
-func saveUserSchedule(c *gin.Context) {
+func SaveUserSchedule(c *gin.Context) {
 	userSchedule := db.UserSchedule{}
 
 	userSchedule.Id = utils.GetParamInt64(c, "id")
@@ -86,22 +87,22 @@ func saveUserSchedule(c *gin.Context) {
 	}
 
 	if result > 0 {
-		result = CODE_SUCCESS
+		result = web.CODE_SUCCESS
 	} else {
-		result = CODE_FAILED
+		result = web.CODE_FAILED
 	}
-	c.JSON(200, JSONResult{
+	c.JSON(200, web.JSONResult{
 		"retCode": result,
 		"message": "SUCCESS",
 		"data":    "保存成功",
 	})
 }
 
-func deleteUserSchedule(c *gin.Context) {
+func DeleteUserSchedule(c *gin.Context) {
 	id, _ := strconv.ParseInt(c.PostForm("id"), 10, 64)
 	if id <= 0 {
-		c.JSON(200, JSONResult{
-			"retCode": CODE_FAILED,
+		c.JSON(200, web.JSONResult{
+			"retCode": web.CODE_FAILED,
 			"message": "参数错误",
 		})
 		return
@@ -109,36 +110,36 @@ func deleteUserSchedule(c *gin.Context) {
 
 	result := db.DeleteUserSchedule(id)
 	if result > 0 {
-		result = CODE_SUCCESS
+		result = web.CODE_SUCCESS
 	} else {
-		result = CODE_FAILED
+		result = web.CODE_FAILED
 	}
-	c.JSON(200, JSONResult{
+	c.JSON(200, web.JSONResult{
 		"retCode": result,
 		"message": "SUCCESS",
 		"data":    result,
 	})
 }
 
-func detailUserSchedule(c *gin.Context) {
+func DetailUserSchedule(c *gin.Context) {
 	id := utils.GetParamInt64(c, "id")
 	if id <= 0 {
-		c.JSON(200, JSONResult{
-			"retCode": CODE_FAILED,
+		c.JSON(200, web.JSONResult{
+			"retCode": web.CODE_FAILED,
 			"message": "参数错误",
 		})
 		return
 	}
 
-	scheduleVO := getUserScheduleDetail(id)
-	c.JSON(200, JSONResult{
-		"retCode": CODE_SUCCESS,
+	scheduleVO := GetUserScheduleDetail(id)
+	c.JSON(200, web.JSONResult{
+		"retCode": web.CODE_SUCCESS,
 		"message": "SUCCESS",
 		"data":    scheduleVO,
 	})
 }
 
-func getUserScheduleDetail(id int64) db.UserScheduleVO {
+func GetUserScheduleDetail(id int64) db.UserScheduleVO {
 	// query schedule
 	query := db.UserScheduleQuery{
 		Id:     id,
@@ -165,7 +166,7 @@ func getUserScheduleDetail(id int64) db.UserScheduleVO {
 	return scheduleVO
 }
 
-func listRuleItem(c *gin.Context) {
+func ListRuleItem(c *gin.Context) {
 	query := db.RuleItemQuery{}
 
 	query.Id = utils.GetParamInt64(c, "id")
@@ -178,8 +179,8 @@ func listRuleItem(c *gin.Context) {
 	query.PageSize = utils.GetParamInt(c, "pageSize")
 
 	count, dataList := db.QueryRuleItem(&query)
-	c.JSON(200, JSONResult{
-		"retCode":    CODE_SUCCESS,
+	c.JSON(200, web.JSONResult{
+		"retCode":    web.CODE_SUCCESS,
 		"message":    "SUCCESS",
 		"dataList":   dataList,
 		"totalCount": count,
@@ -187,7 +188,7 @@ func listRuleItem(c *gin.Context) {
 	})
 }
 
-func saveRuleItem(c *gin.Context) {
+func SaveRuleItem(c *gin.Context) {
 	rule := db.RuleItem{}
 
 	rule.Id = utils.GetParamInt64(c, "id")
@@ -208,22 +209,22 @@ func saveRuleItem(c *gin.Context) {
 	}
 
 	if result > 0 {
-		result = CODE_SUCCESS
+		result = web.CODE_SUCCESS
 	} else {
-		result = CODE_FAILED
+		result = web.CODE_FAILED
 	}
-	c.JSON(200, JSONResult{
+	c.JSON(200, web.JSONResult{
 		"retCode": result,
 		"message": "SUCCESS",
 		"data":    rule,
 	})
 }
 
-func deleteRuleItem(c *gin.Context) {
+func DeleteRuleItem(c *gin.Context) {
 	id := utils.GetParamInt64(c, "id")
 	if id <= 0 {
-		c.JSON(200, JSONResult{
-			"retCode": CODE_FAILED,
+		c.JSON(200, web.JSONResult{
+			"retCode": web.CODE_FAILED,
 			"message": "参数错误",
 		})
 		return
@@ -231,11 +232,11 @@ func deleteRuleItem(c *gin.Context) {
 
 	result := db.DeleteRuleItem(id)
 	if result > 0 {
-		result = CODE_SUCCESS
+		result = web.CODE_SUCCESS
 	} else {
-		result = CODE_FAILED
+		result = web.CODE_FAILED
 	}
-	c.JSON(200, JSONResult{
+	c.JSON(200, web.JSONResult{
 		"retCode": result,
 		"message": "SUCCESS",
 		"data":    result,

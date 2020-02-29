@@ -1,13 +1,14 @@
-package web
+package api
 
 import (
 	"Firebird/config"
 	"Firebird/db"
 	"Firebird/utils"
+	"Firebird/web"
 	"github.com/gin-gonic/gin"
 )
 
-func listUserTrade(c *gin.Context) {
+func ListUserTrade(c *gin.Context) {
 	query := db.UserTradeQuery{}
 
 	query.Id = utils.GetParamInt64(c, "id")
@@ -30,7 +31,7 @@ func listUserTrade(c *gin.Context) {
 		}
 	}
 
-	c.JSON(200, JSONResult{
+	c.JSON(200, web.JSONResult{
 		"retCode":    0,
 		"message":    "SUCCESS",
 		"dataList":   dataList,
@@ -65,12 +66,12 @@ func convertToTradeVO(trade *db.UserTrade) (tradeVO db.UserTradeVO) {
 	return tradeVO
 }
 
-func updateUserTrade(c *gin.Context) {
+func UpdateUserTrade(c *gin.Context) {
 	userTrade := db.UserTrade{}
 
 	userTrade.Id = utils.GetParamInt64(c, "id")
 	if userTrade.Id <= 0 {
-		c.JSON(200, JSONResult{
+		c.JSON(200, web.JSONResult{
 			"retCode": 1,
 			"message": "参数错误",
 		})
@@ -89,18 +90,18 @@ func updateUserTrade(c *gin.Context) {
 
 	result := db.UpdateUserTrade(&userTrade)
 	if result > 0 {
-		result = CODE_SUCCESS
+		result = web.CODE_SUCCESS
 	} else {
-		result = CODE_FAILED
+		result = web.CODE_FAILED
 	}
-	c.JSON(200, JSONResult{
+	c.JSON(200, web.JSONResult{
 		"retCode": result,
 		"message": "SUCCESS",
 		"data":    userTrade,
 	})
 }
 
-func addUserTrade(c *gin.Context) {
+func AddUserTrade(c *gin.Context) {
 	userTrade := db.UserTrade{
 		ScheduleId: 0,
 	}
@@ -123,8 +124,8 @@ func addUserTrade(c *gin.Context) {
 		} else if userTrade.Type == config.TRADE_SOLD {
 			// hold amount check
 			if userTrade.Amount > account.HoldAmount {
-				c.JSON(200, JSONResult{
-					"retCode": CODE_FAILED,
+				c.JSON(200, web.JSONResult{
+					"retCode": web.CODE_FAILED,
 					"message": "余额不足",
 				})
 				return
@@ -135,12 +136,12 @@ func addUserTrade(c *gin.Context) {
 
 	result := db.InsertUserTrade(&userTrade)
 	if result > 0 {
-		result = CODE_SUCCESS
+		result = web.CODE_SUCCESS
 		db.UpdateUserAccount(&account)
 	} else {
-		result = CODE_FAILED
+		result = web.CODE_FAILED
 	}
-	c.JSON(200, JSONResult{
+	c.JSON(200, web.JSONResult{
 		"retCode": result,
 		"message": "SUCCESS",
 		"data":    "操作成功",

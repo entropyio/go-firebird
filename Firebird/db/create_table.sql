@@ -30,6 +30,23 @@ VALUES (3, '1576582464918', '1576582466902', 'steemusdt', 'STEEM/USDT', 1, 'stee
 INSERT INTO symbol_info (id, gmt_create, gmt_modified, symbol_name, symbol_desc, status, symbol_icon, symbol_group)
 VALUES (4, '1576582464918', '1576582466902', 'hcusdt', 'HC/USDT', 1, 'hc', 'HC');
 
+/* config_info */
+
+drop table if exists config_info;
+create table config_info
+(
+    id           INTEGER  not null primary key autoincrement,
+    gmt_create   DATETIME not null,
+    gmt_modified DATETIME not null,
+    ckey      VARCHAR(30)  not null,
+    cvalue    VARCHAR(512)  not null,
+    operator      VARCHAR(30)  default null,
+    creator      VARCHAR(30)  default null,
+    status       int      default 0 not null
+);
+drop index if exists config_info__key;
+create unique index config_info__key
+    on config_info (ckey);
 
 /* user_account */
 

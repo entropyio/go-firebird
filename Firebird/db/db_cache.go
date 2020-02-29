@@ -1,6 +1,7 @@
 package db
 
 import (
+	"Firebird/config"
 	"fmt"
 )
 
@@ -13,6 +14,8 @@ type CacheDataMap struct {
 
 	scheduleIdMap    map[int64]UserSchedule
 	scheduleGroupMap map[string][]UserSchedule
+
+	configMap map[string]string
 }
 
 var cacheDataMap = CacheDataMap{}
@@ -25,6 +28,7 @@ func LoadAllToCache() {
 		symbolNameMap:    make(map[string]SymbolInfo),
 		scheduleIdMap:    make(map[int64]UserSchedule),
 		scheduleGroupMap: make(map[string][]UserSchedule),
+		configMap:        make(map[string]string),
 	}
 
 	// user
@@ -35,7 +39,7 @@ func LoadAllToCache() {
 	if len(userList) > 0 {
 		for _, user := range userList {
 			userIdMap[user.Id] = user
-			userNameMap[user.Username] = user
+			userNameMap[user.UserName] = user
 		}
 	}
 
@@ -71,9 +75,21 @@ func LoadAllToCache() {
 			scheduleGroupMap[key] = groupList
 		}
 	}
+
+	// config
+	configMap := cache.configMap
+	configList := loadAllConfigInfo()
+	if len(configList) > 0 {
+		for _, config := range configList {
+			configMap[config.Ckey] = config.Cvalue
+		}
+	}
+
 	cacheDataMap = cache
 
-	log.Info("LoadAllToCache", len(cacheDataMap.scheduleGroupMap))
+	// update host
+	config.SetHostName(GetConfigFromCache("host_name"))
+	log.Info("LoadAllToCache", len(cacheDataMap.symbolIdMap))
 }
 
 func getGroupKey(symbolId int64, userId int64) string {
@@ -106,4 +122,8 @@ func GetScheduleFromCacheById(id int64) UserSchedule {
 func GetScheduleFromCacheByGroup(symbolId int64, userId int64) []UserSchedule {
 	key := getGroupKey(symbolId, userId)
 	return cacheDataMap.scheduleGroupMap[key]
+}
+
+func GetConfigFromCache(key string) string {
+	return cacheDataMap.configMap[key]
 }

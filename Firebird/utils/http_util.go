@@ -142,7 +142,7 @@ func ApiKeyGet(mapParams map[string]string, strRequestPath string) string {
 	mapParams["SignatureVersion"] = "2"
 	mapParams["Timestamp"] = timestamp
 
-	hostName := config.HOST_NAME
+	hostName := config.GetHostName()
 	mapParams["Signature"] = CreateSign(mapParams, strMethod, hostName, strRequestPath, config.SECRET_KEY)
 
 	if config.ENABLE_PRIVATE_SIGNATURE == true {
@@ -154,7 +154,7 @@ func ApiKeyGet(mapParams map[string]string, strRequestPath string) string {
 		}
 	}
 
-	strUrl := config.TRADE_URL + strRequestPath
+	strUrl := config.GetTradeUrl() + strRequestPath
 
 	return HttpGetRequest(strUrl, MapValueEncodeURI(mapParams))
 }
@@ -179,7 +179,7 @@ func ApiKeyGetOrder(mapParams map[string]string, strRequestPath string) map[stri
 	mapParams["SignatureVersion"] = "2"
 	mapParams["Timestamp"] = timestamp
 
-	hostName := config.HOST_NAME
+	hostName := config.GetHostName()
 
 	mapParams["Signature"] = CreateSign(mapParams, strMethod, hostName, strRequestPath, config.SECRET_KEY)
 
@@ -204,7 +204,7 @@ func ApiKeyPostBatchorder(mapParams map[string]interface{}, strRequestPath strin
 	mapParams2Sign["SignatureVersion"] = "2"
 	mapParams2Sign["Timestamp"] = timestamp
 
-	hostName := config.HOST_NAME
+	hostName := config.GetHostName()
 
 	mapParams2Sign["Signature"] = CreateSign(mapParams2Sign, strMethod, hostName, strRequestPath, config.SECRET_KEY)
 
@@ -218,7 +218,7 @@ func ApiKeyPostBatchorder(mapParams map[string]interface{}, strRequestPath strin
 		}
 	}
 
-	strUrl := config.TRADE_URL + strRequestPath + "?" + Map2UrlQuery(MapValueEncodeURI(mapParams2Sign))
+	strUrl := config.GetTradeUrl() + strRequestPath + "?" + Map2UrlQuery(MapValueEncodeURI(mapParams2Sign))
 
 	return HttpPostRequestBatchorder(strUrl, mapParams)
 }
@@ -241,7 +241,7 @@ func ApiKeyPost(mapParams map[string]string, strRequestPath string) string {
 	mapParams2Sign["SignatureVersion"] = "2"
 	mapParams2Sign["Timestamp"] = timestamp
 
-	hostName := config.HOST_NAME
+	hostName := config.GetHostName()
 
 	mapParams2Sign["Signature"] = CreateSign(mapParams2Sign, strMethod, hostName, strRequestPath, config.SECRET_KEY)
 
@@ -255,7 +255,7 @@ func ApiKeyPost(mapParams map[string]string, strRequestPath string) string {
 		}
 	}
 
-	strUrl := config.TRADE_URL + strRequestPath + "?" + Map2UrlQuery(MapValueEncodeURI(mapParams2Sign))
+	strUrl := config.GetTradeUrl() + strRequestPath + "?" + Map2UrlQuery(MapValueEncodeURI(mapParams2Sign))
 
 	return HttpPostRequest(strUrl, mapParams)
 }
@@ -283,7 +283,7 @@ func ApiKeyPostOrder(mapParams map[string]string, strRequestPath string) map[str
 	mapParams2Sign["Timestamp"] = timestamp
 	mapParams2Sign["op"] = "auth"
 	mapParams2Sign["type"] = "api"
-	hostName := config.HOST_NAME
+	hostName := config.GetHostName()
 
 	mapParams2Sign["Signature"] = CreateSign(mapParams2Sign, strMethod, hostName, strRequestPath, config.SECRET_KEY)
 

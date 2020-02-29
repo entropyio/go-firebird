@@ -6,17 +6,17 @@ import (
 )
 
 type UserInfo struct {
-	Id          int64     `gorose:"id"`
-	GmtCreate   time.Time `gorose:"gmt_create"`
-	GmtModified time.Time `gorose:"gmt_modified"`
-	Username    string    `gorose:"user_name"`
-	UserDesc    string    `gorose:"user_desc"`
-	Status      int       `gorose:"status"`
+	Id          int64     `gorose:"id" json:"id"`
+	GmtCreate   time.Time `gorose:"gmt_create" json:"gmtCreate"`
+	GmtModified time.Time `gorose:"gmt_modified" json:"gmtModified"`
+	UserName    string    `gorose:"user_name" json:"userName"`
+	UserDesc    string    `gorose:"user_desc" json:"userDesc"`
+	Status      int       `gorose:"status" json:"status"`
 }
 
 type UserInfoQuery struct {
 	Id         int64
-	Username   string
+	UserName   string
 	Status     int
 	StartTime  time.Time
 	EndTime    time.Time
@@ -24,23 +24,42 @@ type UserInfoQuery struct {
 	PageSize   int
 }
 
+type ConfigInfo struct {
+	Id          int64     `gorose:"id" json:"id"`
+	GmtCreate   time.Time `gorose:"gmt_create" json:"gmtCreate"`
+	GmtModified time.Time `gorose:"gmt_modified" json:"gmtModified"`
+	Ckey        string    `gorose:"ckey" json:"ckey"`
+	Cvalue      string    `gorose:"cvalue" json:"cvalue"`
+	Operator    string    `gorose:"operator" json:"operator"`
+	Creator     string    `gorose:"creator" json:"creator"`
+	Status      int       `gorose:"status" json:"status"`
+}
+
+type ConfigInfoQuery struct {
+	Id         int64
+	Ckey       string
+	Status     int
+	PageNumber int
+	PageSize   int
+}
+
 type UserAccount struct {
-	Id           int64     `gorose:"id"`
-	GmtCreate    time.Time `gorose:"gmt_create"`
-	GmtModified  time.Time `gorose:"gmt_modified"`
-	UserId       int64     `gorose:"user_id"`
-	SymbolId     int64     `gorose:"symbol_id"`
-	HoldPrice    float64   `gorose:"hold_price"`
-	HoldAmount   float64   `gorose:"hold_amount"`
-	YestBenefit  float64   `gorose:"yest_benefit"`
-	TotalBenefit float64   `gorose:"total_benefit"`
-	Price        float64   `gorose:"price"`
-	Amount       float64   `gorose:"amount"`
-	Total        float64   `gorose:"total"`
-	Benefit      float64   `gorose:"benefit"`
-	Rate         float64   `gorose:"rate"`
-	SortNum      int       `gorose:"sort_num"`
-	Status       int       `gorose:"status"`
+	Id           int64     `gorose:"id" json:"id"`
+	GmtCreate    time.Time `gorose:"gmt_create" json:"gmtCreate"`
+	GmtModified  time.Time `gorose:"gmt_modified" json:"gmtModified"`
+	UserId       int64     `gorose:"user_id" json:"user_id"`
+	SymbolId     int64     `gorose:"symbol_id" json:"symbolId"`
+	HoldPrice    float64   `gorose:"hold_price" json:"holdPrice"`
+	HoldAmount   float64   `gorose:"hold_amount" json:"holdAmount"`
+	YestBenefit  float64   `gorose:"yest_benefit" json:"yestBenefit"`
+	TotalBenefit float64   `gorose:"total_benefit" json:"totalBenefit"`
+	Price        float64   `gorose:"price" json:"price"`
+	Amount       float64   `gorose:"amount" json:"amount"`
+	Total        float64   `gorose:"total" json:"total"`
+	Benefit      float64   `gorose:"benefit" json:"benefit"`
+	Rate         float64   `gorose:"rate" json:"rate"`
+	SortNum      int       `gorose:"sort_num" json:"sortNum"`
+	Status       int       `gorose:"status" json:"status"`
 }
 
 type UserAccountVO struct {

@@ -17,7 +17,7 @@ func GetHistoryKline(strSymbol, strPeriod string, nSize int) string {
 	mapParams["size"] = strconv.Itoa(nSize)
 
 	strRequestUrl := "/market/history/kline"
-	strUrl := config.MARKET_URL + strRequestUrl
+	strUrl := config.GetMarketUrl() + strRequestUrl
 
 	jsonKLineReturn := utils.HttpGetRequest(strUrl, mapParams)
 	return jsonKLineReturn

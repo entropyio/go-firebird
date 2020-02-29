@@ -1,12 +1,13 @@
-package web
+package api
 
 import (
 	"Firebird/db"
 	"Firebird/utils"
+	"Firebird/web"
 	"github.com/gin-gonic/gin"
 )
 
-func listSymbolInfo(c *gin.Context) {
+func ListSymbolInfo(c *gin.Context) {
 	query := db.SymbolInfoQuery{}
 
 	query.Id = utils.GetParamInt64(c, "id")
@@ -17,8 +18,8 @@ func listSymbolInfo(c *gin.Context) {
 	query.PageSize = utils.GetParamInt(c, "pageSize")
 
 	count, dataList := db.QuerySymbolInfo(&query)
-	c.JSON(200, JSONResult{
-		"retCode":    CODE_SUCCESS,
+	c.JSON(200, web.JSONResult{
+		"retCode":    web.CODE_SUCCESS,
 		"message":    "SUCCESS",
 		"dataList":   dataList,
 		"totalCount": count,
@@ -26,7 +27,7 @@ func listSymbolInfo(c *gin.Context) {
 	})
 }
 
-func saveSymbolInfo(c *gin.Context) {
+func SaveSymbolInfo(c *gin.Context) {
 	symbolInfo := db.SymbolInfo{}
 
 	symbolInfo.Id = utils.GetParamInt64(c, "id")
@@ -44,22 +45,22 @@ func saveSymbolInfo(c *gin.Context) {
 	}
 
 	if result > 0 {
-		result = CODE_SUCCESS
+		result = web.CODE_SUCCESS
 	} else {
-		result = CODE_FAILED
+		result = web.CODE_FAILED
 	}
-	c.JSON(200, JSONResult{
+	c.JSON(200, web.JSONResult{
 		"retCode": result,
 		"message": "SUCCESS",
 		"data":    symbolInfo,
 	})
 }
 
-func deleteSymbolInfo(c *gin.Context) {
+func DeleteSymbolInfo(c *gin.Context) {
 	id := utils.GetParamInt64(c, "id")
 	if id <= 0 {
-		c.JSON(200, JSONResult{
-			"retCode": CODE_FAILED,
+		c.JSON(200, web.JSONResult{
+			"retCode": web.CODE_FAILED,
 			"message": "参数错误",
 		})
 		return
@@ -67,11 +68,11 @@ func deleteSymbolInfo(c *gin.Context) {
 
 	result := db.DeleteSymbolInfo(id)
 	if result > 0 {
-		result = CODE_SUCCESS
+		result = web.CODE_SUCCESS
 	} else {
-		result = CODE_FAILED
+		result = web.CODE_FAILED
 	}
-	c.JSON(200, JSONResult{
+	c.JSON(200, web.JSONResult{
 		"retCode": result,
 		"message": "SUCCESS",
 		"data":    result,

@@ -1,12 +1,13 @@
-package web
+package api
 
 import (
 	"Firebird/db"
 	"Firebird/utils"
+	"Firebird/web"
 	"github.com/gin-gonic/gin"
 )
 
-func listUserData(c *gin.Context) {
+func ListUserData(c *gin.Context) {
 	query := db.UserDataQuery{}
 
 	query.Id = utils.GetParamInt64(c, "id")
@@ -22,7 +23,7 @@ func listUserData(c *gin.Context) {
 
 	count, dataList := db.QueryUserData(&query)
 
-	c.JSON(200, JSONResult{
+	c.JSON(200, web.JSONResult{
 		"retCode":    0,
 		"message":    "SUCCESS",
 		"dataList":   dataList,

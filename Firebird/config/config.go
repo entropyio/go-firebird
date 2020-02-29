@@ -6,15 +6,9 @@ const (
 	ACCESS_KEY string = "*" // huobi申请的apiKey  必填
 	SECRET_KEY string = "*" // huobi申请的secretKey  必填
 
-	// API请求地址, 不要带最后的/
-	MARKET_URL   string = "https://api.huobi.so"
-	TRADE_URL    string = "https://api.huobi.so"
-	WS_URL       string = "wss://api.huobi.so/ws"
-	WS_ORDER_URL string = "wss://api.huobi.so/ws/v1"
-	Local_IP     string = "192.168.1.104" //本地IP地址 Your Local IP  选填
+	//HOST_NAME string = "api.huobi.so"
 
-	//replace with real URLs and HostName
-	HOST_NAME string = "api.hbdm.com"
+	Local_IP string = "192.168.1.104" //本地IP地址 Your Local IP  选填
 
 	ENABLE_PRIVATE_SIGNATURE bool = false
 
@@ -26,3 +20,32 @@ const (
 	// default symbol sync count
 	SYMBOL_SYNC_COUNT = 3 // include yesterday and before yesterday.
 )
+
+var hostName string = "api.huobiasia.vip"
+
+func GetHostName() string  {
+	return hostName
+}
+
+func SetHostName(host string)  {
+	if "" != host {
+		hostName = host
+	}
+}
+
+// API请求地址, 不要带最后的/
+func GetMarketUrl() string {
+	return "https://" + hostName
+}
+
+func GetTradeUrl() string {
+	return "https://" + hostName
+}
+
+func GetWsUrl() string {
+	return "wss://" + hostName + "/ws"
+}
+
+func GetWsOrderUrl() string {
+	return "wss://" + hostName + "/ws/v1"
+}

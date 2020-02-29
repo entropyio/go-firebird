@@ -25,6 +25,7 @@ func StartScheduleTask() {
 	c.AddFunc(spec1, func() {
 		log.Info("load all db data to cache")
 		db.LoadAllToCache()
+
 	})
 
 	// 每天0：10 - update daily benefit

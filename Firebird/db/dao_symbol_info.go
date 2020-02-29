@@ -20,7 +20,10 @@ func QuerySymbolInfo(symbolInfoQuery *SymbolInfoQuery) (count int64, userList []
 		query.Where("id", "=", symbolInfoQuery.Id)
 	}
 	if symbolInfoQuery.SymbolName != "" {
-		query.Where("symbol_name", "=", symbolInfoQuery.SymbolName)
+		query.Where("symbol_name", "like", "%"+symbolInfoQuery.SymbolName+"%")
+	}
+	if symbolInfoQuery.SymbolGroup != "" {
+		query.Where("symbol_group", "=", symbolInfoQuery.SymbolGroup)
 	}
 	if symbolInfoQuery.Status > 0 {
 		query.Where("status", "=", symbolInfoQuery.Status)
